@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ecust.mapper.AddressBookMapper">
+    <select id="list">
+        select * from ruiji.address_book
+    </select>
+    <update id="setDefault0">
+        update ruiji.address_book set
+            is_default=0
+            where is_default=1;
+    </update>
+    <update id="setDefault1">
+        update ruiji.address_book set
+        is_default=1,update_time=now(),update_user=#{updateUser}
+        where id=#{id}
+    </update>
+    <insert id="insert">
+        insert into ruiji.address_book(id, user_id, consignee, sex, phone,  detail, label,is_default,
+                                       create_time, update_time, create_user, update_user)
+                                       VALUE (#{id},#{userId},#{consignee},#{sex},#{phone},#{detail},#{label},0,now(),now(),#{createUser},#{updateUser})
+    </insert>
+    <select id="getByDefault">
+        select id, user_id, consignee, sex, phone, province_code, province_name, city_code, city_name, district_code, district_name, detail, label,
+               is_default, create_time, update_time, create_user, update_user, is_deleted  from ruiji.address_book
+                where is_default=1;
+    </select>
+    <select id="getById">
+        select id, user_id, consignee, sex, phone, province_code, province_name, city_code, city_name,
+               district_code, district_name, detail, label,
+               is_default, create_time, update_time, create_user, update_user,
+               is_deleted  from ruiji.address_book
+                where id=#{addressBookId}
+    </select>
+</mapper>

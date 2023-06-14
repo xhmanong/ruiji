@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ecust.mapper.ShoppingCartMapper">
+    <select id="select">
+        select id,name,image,user_id,dish_id,
+        setmeal_id,dish_flavor, number, amount
+        from ruiji.shopping_cart
+        <where>
+            <if test="dishId !=null">
+                dish_id=#{dishId}
+            </if>
+            <if test="setmealId !=null">
+                setmeal_id=#{setmealId}
+            </if>
+        </where>
+    </select>
+    <insert id="insert">
+        insert into ruiji.shopping_cart(id, name, image, user_id, dish_id, setmeal_id, dish_flavor, number, amount,
+                                        create_time)
+            VALUE (#{id}, #{name}, #{image}, #{userId}, #{dishId}, #{setmealId}, #{dishFlavor}, #{number}, #{amount},
+                   now())
+    </insert>
+    <update id="update">
+        update ruiji.shopping_cart set number=#{number},amount=#{amount},create_time=now()
+        <where>
+            <if test="dishId !=null">
+                dish_id=#{dishId}
+            </if>
+            <if test="setmealId !=null">
+                setmeal_id=#{setmealId}
+            </if>
+        </where>
+    </update>
+    <select id="listById">
+        select id, name, image, user_id, dish_id, setmeal_id, dish_flavor, number, amount, create_time from
+        ruiji.shopping_cart
+        <where>
+            <if test="userId !=null">
+                user_id=#{userId}
+            </if>
+        </where>
+    </select>
+    <delete id="delete">
+        delete
+        from ruiji.shopping_cart
+    </delete>
+    <select id="count">
+        select sum(amount)
+        from ruiji.shopping_cart
+        where user_id = #{user}
+    </select>
+    <select id="list">
+        select id,
+               name,
+               image,
+               user_id,
+               dish_id,
+               setmeal_id,
+               dish_flavor,
+               number,
+               amount,
+               create_time
+        from ruiji.shopping_cart
+    </select>
+    <delete id="deleteById">
+        delete from ruiji.shopping_cart
+        <where>
+            <if test="dishId!=null">
+                dish_id=#{dishId}
+            </if>
+            <if test="setmealId !=null">
+                setmeal_id=#{setmealId}
+            </if>
+        </where>
+    </delete>
+</mapper>

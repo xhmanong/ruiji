@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ecust.mapper.DishMapper">
+    <select id="page">
+        select * from ruiji.dish
+        <where>
+            <if test="name!=null">
+                name like concat("%",#{name},"%")
+            </if>
+        </where>
+    </select>
+    <insert id="add">
+        insert into ruiji.dish(id, name, category_id,
+                               price, code, image, description,
+                               create_time, update_time, create_user, update_user)
+            VALUE (#{id}, #{name}, #{categoryId}, #{price}, #{code},
+                   #{image}, #{description}, now(), now(), #{createUser}, #{updateUser})
+    </insert>
+
+    <insert id="addFlavor">
+        insert into ruiji.dish_flavor(id, dish_id, name, value,
+                                      create_time, update_time, create_user, update_user)
+            value (#{id}, #{dishId}, #{name}, #{value}, now(), now(), #{createUser}, #{updateUser})
+    </insert>
+    <delete id="deleteById">
+        delete from ruiji.dish where id in
+        <foreach collection="ids" item="ids" open="(" close=")" separator=",">#{ids}</foreach>
+    </delete>
+    <delete id="deleteByIdWithDlavors">
+        delete from ruiji.dish_flavor where dish_id in
+        <foreach collection="ids" item="ids" open="(" close=")" separator=",">#{ids}</foreach>
+    </delete>
+    <update id="updateStatus">
+        update ruiji.dish set status=#{status} where id in
+        <foreach collection="ids" item="ids" open="(" close=")" separator=",">#{ids}</foreach>
+    </update>
+    <select id="getById">
+        select *
+        from ruiji.dish
+        where id = #{id}
+    </select>
+    <select id="getByIdWithFlavor">
+        select name, value
+        from ruiji.dish_flavor
+        where dish_id = #{id}
+    </select>
+    <update id="update">
+        update ruiji.dish
+        set name=#{name},
+            category_id=#{categoryId},
+            price=#{price},
+            image=#{image},
+            description=#{description},
+            update_time=now(),
+            update_user=#{updateUser}
+        where id = #{id}
+    </update>
+
+    <select id="listById">
+        select * from ruiji.dish
+        <where>
+            <if test="categoryId!=null">
+                category_id=#{categoryId}
+            </if>
+            <if test="name!=null">
+                name like concat("%",#{name},"%")
+            </if>
+        </where>
+    </select>
+</mapper>

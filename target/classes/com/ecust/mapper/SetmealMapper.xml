@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ecust.mapper.SetmealMapper">
+    <select id="page">
+        select * from ruiji.setmeal <where>
+        <if test="name!=null">
+            name like concat("%",#{name},"%")
+        </if>
+    </where>
+    </select>
+    <insert id="add">
+        insert into ruiji.setmeal(id, category_id, name, price, status,
+                                  code, description, image, create_time,
+                                  update_time, create_user, update_user)
+                                  VALUE(#{id},#{categoryId},#{name},#{price},
+                                       #{status},#{code},#{description},#{image},
+                                       now(),now(),#{createUser},#{updateUser})
+    </insert>
+    <insert id="addWithDish">
+        insert into ruiji.setmeal_dish(id, setmeal_id, dish_id, name, price,
+                                       copies, create_time, update_time,
+                                       create_user, update_user)
+                                        VALUE(#{id},#{setmealId},#{dishId},#{name},
+                                             #{price},#{copies},now(),now(),#{createUser},
+                                             #{updateUser})
+    </insert>
+    <delete id="delete">
+        delete from ruiji.setmeal where id in <foreach collection="ids" item="ids" open="(" separator="," close=")">#{ids}</foreach>
+    </delete>
+    <delete id="deleteWithDish">
+        delete from ruiji.setmeal_dish where setmeal_id in <foreach collection="ids" item="ids" open="(" separator="," close=")">#{ids}</foreach>
+    </delete>
+    <update id="changeStatus">
+        update ruiji.setmeal set status=#{status} ,update_time=now()where id in <foreach collection="ids" item="ids" open="(" separator="," close=")">#{ids}</foreach>
+    </update>
+    <select id="getById">
+        select id, category_id, name, price, status, code, description, image, create_time, update_time, create_user, update_user, is_deleted from ruiji.setmeal where id=#{id}
+    </select>
+    <select id="getByIdWithDish">
+        select copies,dish_id,name,price from ruiji.setmeal_dish where setmeal_id=#{id}
+    </select>
+    <update id="update">
+        update ruiji.setmeal set category_id=#{categoryId},name=#{name},
+                                 price=#{price},image=#{image},description=#{description},
+                                update_time=now(),update_user=#{updateUser} where id=#{id}
+    </update>
+    <select id="list">
+        select id,category_id,name,price,status,code,description,image
+        from ruiji.setmeal
+        where category_id=#{categoryId} and status=#{status}
+    </select>
+</mapper>
